@@ -106,20 +106,18 @@ def LinearBlock(in_features, out_features):
     )
 
 
-class UNetClassifier(UNet):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+class EncoderClassifier(nn.Module):
+    def __init__(self, in_channels: int = 3, init_features: int = 32):
+        super().__init__()
+        self.encoder = Encoder(in_channels, init_features)
         self.classifier = nn.Sequential(
-            *LinearBlock(512 * 14 * 14, 8192),
-            *LinearBlock(8192, 1024),
+            *LinearBlock(256 * 14 * 14, 4096),
+            *LinearBlock(4096, 1024),
             nn.Linear(1024, 1),
             nn.Sigmoid(),
         )
 
     def forward(self, x: Tensor) -> Tuple[Tensor]:
-        x, x1, x2, x3, x4 = self.encoder(x)
-        x = self.bottleneck(x)
-        y = self.classifier(x.flatten(1))
-        x = self.decoder(x, x4, x3, x2, x1)
-        x = self.header(x)
-        return x, y
+        x = self.encoder(x)[0]
+        x = self.classifier(x.flatten(1))
+        return x
