@@ -1,1 +1,3 @@
 pytorch-lightning==0.7.5
+alchemy==20.5
+catalyst==20.12
