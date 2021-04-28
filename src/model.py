@@ -14,22 +14,22 @@ class Deconv2d(nn.ConvTranspose2d):
 
 def ConvBlock(in_channels: int, out_channels: int):
     return nn.Sequential(
-        nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1),
+        nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1, bias=False),
         nn.BatchNorm2d(out_channels),
         nn.ReLU(),
-        nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1),
+        nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1, bias=False),
         nn.BatchNorm2d(out_channels),
         nn.ReLU(),
     )
 
 
 class Encoder(nn.Module):
-    def __init__(self, in_channels: int, channels: Tuple[int]):
+    def __init__(self, in_channels: int, num_features: int):
         super().__init__()
-        self.conv1 = ConvBlock(in_channels, channels[0])
-        self.conv2 = ConvBlock(channels[0], channels[1])
-        self.conv3 = ConvBlock(channels[1], channels[2])
-        self.conv4 = ConvBlock(channels[2], channels[3])
+        self.conv1 = ConvBlock(in_channels, num_features)
+        self.conv2 = ConvBlock(num_features, num_features * 2)
+        self.conv3 = ConvBlock(num_features * 2, num_features * 4)
+        self.conv4 = ConvBlock(num_features * 4, num_features * 8)
         self.pool = nn.MaxPool2d(2)
 
     def forward(self, x: Tensor) -> Tuple[Tensor]:
@@ -45,16 +45,16 @@ class Encoder(nn.Module):
 
 
 class Decoder(nn.Module):
-    def __init__(self, channels: Tuple[int], dropout: float):
+    def __init__(self, num_features: int):
         super().__init__()
-        self.deconv4 = Deconv2d(channels[4], channels[3], kernel_size=2, stride=2)
-        self.conv4 = ConvBlock(channels[4], channels[3])
-        self.deconv3 = Deconv2d(channels[3], channels[2], kernel_size=2, stride=2)
-        self.conv3 = ConvBlock(channels[3], channels[2])
-        self.deconv2 = Deconv2d(channels[2], channels[1], kernel_size=2, stride=2)
-        self.conv2 = ConvBlock(channels[2], channels[1])
-        self.deconv1 = Deconv2d(channels[1], channels[0], kernel_size=2, stride=2)
-        self.conv1 = ConvBlock(channels[1], channels[0])
+        self.deconv4 = Deconv2d(num_features * 16, num_features * 8, kernel_size=2, stride=2)
+        self.conv4 = ConvBlock(num_features * 16, num_features * 8)
+        self.deconv3 = Deconv2d(num_features * 8, num_features * 4, kernel_size=2, stride=2)
+        self.conv3 = ConvBlock(num_features * 8, num_features * 4)
+        self.deconv2 = Deconv2d(num_features * 4, num_features * 2, kernel_size=2, stride=2)
+        self.conv2 = ConvBlock(num_features * 4, num_features * 2)
+        self.deconv1 = Deconv2d(num_features * 2, num_features, kernel_size=2, stride=2)
+        self.conv1 = ConvBlock(num_features * 2, num_features)
 
     def forward(self, x: Tensor, x4: Tensor, x3: Tensor, x2: Tensor, x1: Tensor) -> Tensor:
         x = self.deconv4(x, x4)
@@ -69,13 +69,14 @@ class Decoder(nn.Module):
 
 
 class UNet(nn.Module):
-    def __init__(self, in_channels: int = 1, channels: Tuple[int] = (32, 64, 128, 256, 512), dropout: float = 0.0):
+    def __init__(self, in_channels: int = 3, out_channels: int = 1, init_features: int = 32):
         super().__init__()
-        self.encoder = Encoder(in_channels, channels)
-        self.bottleneck = ConvBlock(channels[3], channels[4])
-        self.decoder = Decoder(channels, dropout)
-        self.head = nn.Sequential(
-            nn.Conv2d(channels[0], 1, kernel_size=1),
+        num_feautres = init_features
+        self.encoder = Encoder(in_channels, num_feautres)
+        self.bottleneck = ConvBlock(num_feautres * 8, num_feautres * 16)
+        self.decoder = Decoder(num_feautres)
+        self.header = nn.Sequential(
+            nn.Conv2d(num_feautres, 1, kernel_size=1),
             nn.Sigmoid(),
         )
 
@@ -83,8 +84,18 @@ class UNet(nn.Module):
         x, x1, x2, x3, x4 = self.encoder(x)
         x = self.bottleneck(x)
         x = self.decoder(x, x4, x3, x2, x1)
-        x = self.head(x)
+        x = self.header(x)
         return x
+
+    @staticmethod
+    def load_from_torch_hub():
+        model = UNet()
+        state_dict = model.state_dict()
+        state_dict_hub = torch.load('torch_hub_unet.pt')
+        for key_hub, key in zip(state_dict_hub.keys(), state_dict.keys()):
+            state_dict[key] = state_dict_hub[key_hub]
+        model.load_state_dict(state_dict)
+        return model
 
 
 def LinearBlock(in_features, out_features):
@@ -110,5 +121,5 @@ class UNetClassifier(UNet):
         x = self.bottleneck(x)
         y = self.classifier(x.flatten(1))
         x = self.decoder(x, x4, x3, x2, x1)
-        x = self.head(x)
+        x = self.header(x)
         return x, y
