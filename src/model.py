@@ -14,10 +14,10 @@ class Deconv2d(nn.ConvTranspose2d):
 
 def ConvBlock(in_channels: int, out_channels: int):
     return nn.Sequential(
-        nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1, bias=False),
+        nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1),# bias=False),
         nn.BatchNorm2d(out_channels),
         nn.ReLU(),
-        nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1, bias=False),
+        nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1),# bias=False),
         nn.BatchNorm2d(out_channels),
         nn.ReLU(),
     )
@@ -69,7 +69,7 @@ class Decoder(nn.Module):
 
 
 class UNet(nn.Module):
-    def __init__(self, in_channels: int = 1, out_channels: int = 1, init_features: int = 32):
+    def __init__(self, in_channels: int = 3, out_channels: int = 1, init_features: int = 32):
         super().__init__()
         num_feautres = init_features
         self.encoder = Encoder(in_channels, num_feautres)
@@ -107,7 +107,7 @@ def LinearBlock(in_features, out_features):
 
 
 class EncoderClassifier(nn.Module):
-    def __init__(self, in_channels: int = 1, init_features: int = 32):
+    def __init__(self, in_channels: int = 3, init_features: int = 32):
         super().__init__()
         self.encoder = Encoder(in_channels, init_features)
         self.classifier = nn.Sequential(

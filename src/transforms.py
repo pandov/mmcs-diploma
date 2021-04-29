@@ -16,7 +16,7 @@ class Compose(T.Compose):
 
 class SingleChannel(object):
     def __call__(self, image: Image, mask: Image) -> Tuple[Image]:
-        image = image.convert('L')
+        # image = image.convert('L')
         mask = mask.convert('1')
         return image, mask
 
