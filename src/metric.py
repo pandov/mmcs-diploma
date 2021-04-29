@@ -3,9 +3,9 @@ from torch import Tensor
 
 import torch
 
-def intersection_union(outputs: Tensor, targets: Tensor) -> Tuple[Tensor]:
-    intersection = (outputs * targets).sum(dim=[1, 2, 3])
-    union = outputs.sum(dim=[1, 2, 3]) + targets.sum(dim=[1, 2, 3])
+def intersection_union(outputs: Tensor, targets: Tensor) -> Tuple[Tensor]: # dim=[1, 2, 3]
+    intersection = (outputs * targets).sum()
+    union = outputs.sum() + targets.sum()
     return intersection, union
 
 def dice(outputs: Tensor, targets: Tensor) -> Tensor:
