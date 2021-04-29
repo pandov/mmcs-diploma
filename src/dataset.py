@@ -6,6 +6,7 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 from torchvision.datasets.folder import default_loader
 from pathlib import Path
+from os import cpu_count
 from src import transforms
 
 class CracksDataset(Dataset):
@@ -73,9 +74,10 @@ class CracksDataset(Dataset):
         }
 
     def get_loader(self, **kwargs) -> DataLoader:
+        kwargs['num_workers'] = kwargs.pop('num_workers', cpu_count())
         return DataLoader(
             dataset=self,
             collate_fn=self._collate_fn,
             pin_memory=torch.cuda.is_available(),
-            **kwargs
+            **kwargs,
         )
