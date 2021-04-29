@@ -9,3 +9,5 @@ https://amaarora.github.io/2020/09/13/unet.html
 https://pytorch.org/hub/mateuszbuda_brain-segmentation-pytorch_unet/
 
 https://medium.com/@Biboswan98/optim-adam-vs-optim-sgd-lets-dive-in-8dbf1890fbdc
+
+https://stats.stackexchange.com/questions/321460/dice-coefficient-loss-function-vs-cross-entropy
