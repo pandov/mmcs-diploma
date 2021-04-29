@@ -7,3 +7,5 @@ https://www.codecogs.com/latex/eqneditor.php
 https://amaarora.github.io/2020/09/13/unet.html
 
 https://pytorch.org/hub/mateuszbuda_brain-segmentation-pytorch_unet/
+
+https://medium.com/@Biboswan98/optim-adam-vs-optim-sgd-lets-dive-in-8dbf1890fbdc
