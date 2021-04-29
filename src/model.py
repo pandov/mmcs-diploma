@@ -69,7 +69,7 @@ class Decoder(nn.Module):
 
 
 class UNet(nn.Module):
-    def __init__(self, in_channels: int = 1, out_channels: int = 1, init_features: int = 32):
+    def __init__(self, in_channels: int = 3, out_channels: int = 1, init_features: int = 32):
         super().__init__()
         num_feautres = init_features
         self.encoder = Encoder(in_channels, num_feautres)
@@ -107,7 +107,7 @@ def LinearBlock(in_features, out_features):
 
 
 class EncoderClassifier(nn.Module):
-    def __init__(self, in_channels: int = 1, init_features: int = 32):
+    def __init__(self, in_channels: int = 3, init_features: int = 32):
         super().__init__()
         self.encoder = Encoder(in_channels, init_features)
         self.classifier = nn.Sequential(
