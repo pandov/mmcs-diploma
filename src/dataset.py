@@ -57,7 +57,7 @@ class CracksDataset(Dataset):
         }
 
     @staticmethod
-    def is_cracks_exists(masks: Tensor, threshold: float = 0.01) -> Tensor:
+    def is_cracks_exists(masks: Tensor, threshold: float = 0.001) -> Tensor:
         h, w = masks.shape[-2:]
         scale = masks.sum(dim=[1, 2, 3])
         return (scale / (h * w) >= threshold).int()
