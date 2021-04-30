@@ -13,3 +13,5 @@ https://medium.com/@Biboswan98/optim-adam-vs-optim-sgd-lets-dive-in-8dbf1890fbdc
 https://stats.stackexchange.com/questions/321460/dice-coefficient-loss-function-vs-cross-entropy
 
 https://arxiv.org/pdf/2006.14822.pdf
+
+https://www.jeremyjordan.me/semantic-segmentation/
