@@ -22,7 +22,7 @@ class BCEDiceLoss(torch.nn.Module):
         self.bce_loss = torch.nn.BCELoss()
         self.dice_loss = DiceLoss()
 
-    def forward(self, outputs: Tensor, targets: Tensor, classes: Tensor) -> Tensor:
+    def forward(self, outputs: Tensor, targets: Tensor) -> Tensor:
         bce = self.bce_loss(outputs, targets)
-        dice = self.dice_loss(outputs, targets) * classes
-        return self.bce_weight * bce + self.dice_weight * dice.mean()
+        dice = self.dice_loss(outputs, targets).mean()
+        return self.bce_weight * bce + self.dice_weight * dice
