@@ -71,7 +71,7 @@ class CracksDataset(Dataset):
         return {
             'images': torch.cat(images),
             'masks': torch.cat(masks),
-            'cracks': torch.cat(cracks),
+            'cracks': torch.cat(cracks).unsqueeze(1).float(),
         }
 
     def get_loader(self, **kwargs) -> DataLoader:
