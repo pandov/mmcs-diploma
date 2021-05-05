@@ -15,6 +15,7 @@ class CracksDataset(Dataset):
             transforms.SingleChannel(),
             transforms.RandomVerticalFlip(),
             transforms.RandomHorizontalFlip(),
+            transforms.RandomRotation(),
             transforms.FiveCrop(224),
             transforms.ToTensor(),
         ]),
@@ -74,9 +75,9 @@ class CracksDataset(Dataset):
         }
 
     def get_loader(self, **kwargs) -> DataLoader:
+        kwargs['num_workers'] = kwargs.pop('num_workers', cpu_count())
         return DataLoader(
             dataset=self,
-            num_workers=cpu_count(),
             collate_fn=self._collate_fn,
             pin_memory=torch.cuda.is_available(),
             **kwargs,

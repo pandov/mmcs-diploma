@@ -14,14 +14,16 @@ class Compose(T.Compose):
         return image, mask
 
 
-class SingleChannel(object):
+class Transform(object):
+    def __repr__(self):
+        return self.__class__.__name__ + '()'
+
+
+class SingleChannel(Transform):
     def __call__(self, image: Image, mask: Image) -> Tuple[Image]:
         # image = image.convert('L')
         mask = mask.convert('1')
         return image, mask
-
-    def __repr__(self):
-        return self.__class__.__name__ + '()'
 
 
 class RandomHorizontalFlip(T.RandomHorizontalFlip):
@@ -37,6 +39,14 @@ class RandomVerticalFlip(T.RandomVerticalFlip):
         if torch.rand(1) < self.p:
             image = F.vflip(image)
             mask = F.vflip(mask)
+        return image, mask
+
+
+class RandomRotation(Transform):
+    def __call__(self, image: Image, mask: Image) -> Tuple[Image]:
+        angle = 90 * torch.randint(0, 4, (1,)).item()
+        image = F.rotate(image, angle)
+        mask = F.rotate(mask, angle)
         return image, mask
 
 

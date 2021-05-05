@@ -106,9 +106,9 @@ def LinearBlock(in_features, out_features):
 
 
 class EncoderClassifier(nn.Module):
-    def __init__(self, in_channels: int = 3, init_features: int = 32):
+    def __init__(self, in_channels: int = 3, init_features: int = 32, bias: bool = False):
         super().__init__()
-        self.encoder = Encoder(in_channels, init_features)
+        self.encoder = Encoder(in_channels, init_features, bias)
         self.classifier = nn.Sequential(
             *LinearBlock(256 * 14 * 14, 4096),
             *LinearBlock(4096, 1024),

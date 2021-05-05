@@ -21,4 +21,4 @@ def iou(outputs: Tensor, targets: Tensor, reduction: str = None) -> Tensor:
     return score
 
 def accuracy(outputs: Tensor, targets: Tensor, threshold: float = 0.5) -> Tensor:
-    return ((outputs > threshold).float() == targets).float().mean()
+    return ((outputs > threshold).int() == targets).float().mean()
