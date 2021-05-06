@@ -111,8 +111,7 @@ class EncoderClassifier(nn.Module):
         self.encoder = Encoder(in_channels, init_features, bias)
         self.encoder.requires_grad_(False)
         self.classifier = nn.Sequential(
-            *LinearBlock(256 * 14 * 14, 4096),
-            *LinearBlock(4096, 1024),
+            *LinearBlock(256 * 14 * 14, 1024),
             nn.Linear(1024, 1),
             nn.Sigmoid(),
         )
