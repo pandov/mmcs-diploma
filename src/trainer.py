@@ -62,16 +62,5 @@ class Trainer(Runner):
             'valid': datasets['valid'].get_loader(
                 batch_size=batch_size),
         }
-
-        model = kwargs.pop('model')
-        optimizer = torch.optim.SGD(
-            net.parameters(),
-            lr=1e-3,
-            momentum=0.9)
-
-        kwargs.update({
-            'model': model,
-            'optimizer': optimizer,
-            'loaders': loaders,
-        })
+        kwargs['loaders'] = loaders
         super().train(*args, **kwargs)
