@@ -145,14 +145,16 @@ class Classifier(nn.Module):
         self.avgpool = nn.AvgPool2d(2)
         self.header = nn.Sequential(
             nn.Flatten(1),
-            LinearBlock(1024 * 7 * 7, 2048),
+            LinearBlock(512 * 7 * 7, 2048),
             LinearBlock(2048, 1024),
             nn.Linear(1024, 1),
             nn.Sigmoid(),
         )
 
     def forward(self, x: Tensor) -> Tensor:
+        print(x.shape)
         x = self.avgpool(x)
+        print(x.shape)
         x = self.header(x)
         return x
 
@@ -171,6 +173,7 @@ class VGGEncoderClassifier(nn.Module):
 
     def forward(self, x: Tensor) -> Tuple[Tensor]:
         x = self.VGGEncoder(x)[0]
+        print(x.shape)
         x = self.classifier(x)
         return x
 
