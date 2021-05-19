@@ -10,7 +10,7 @@ from os import cpu_count
 from src import augmentations
 
 class CracksDataset(Dataset):
-    transform = {
+    TRANSFORM = {
         'train': augmentations.Compose([
             augmentations.SingleChannel(),
             augmentations.RandomVerticalFlip(),
@@ -27,17 +27,14 @@ class CracksDataset(Dataset):
     }
 
     def __init__(self, mode: str):
-        self.mode = mode
-        self.images = tuple(Path(f'dataset/{mode}/images').rglob('*.jpg'))
-        self.masks = tuple(Path(f'dataset/{mode}/masks').rglob('*.jpg'))
-        self._check_matches()
+        self.transform = self.TRANSFORM[mode]
+        self.images = tuple(Path(f'dataset/{mode}/images')\
+            .rglob('*.jpg'))
+        self.masks = tuple(Path(f'dataset/{mode}/masks')\
+            .rglob('*.jpg'))
 
     def __len__(self):
         return len(self.images)
-
-    def _check_matches(self):
-        for image, mask in zip(self.images, self.masks):
-            assert image.name == mask.name, f'Does not match: {image.name} != {mask.name}'
 
     def image(self, index: int) -> Image:
         return default_loader(self.images[index])
@@ -48,9 +45,10 @@ class CracksDataset(Dataset):
     def __getitem__(self, index: int) -> Dict[str, Tensor]:
         image = self.image(index)
         mask = self.mask(index)
-        images, masks = self.transform[self.mode](image, mask)
+        images, masks = self.transform(image, mask)
         cracks = self.is_cracks_exists(masks)
-        masks[cracks == 0] = torch.zeros_like(masks[cracks == 0])
+        masks[cracks == 0] =\
+            torch.zeros_like(masks[cracks == 0])
         return {
             'images': images,
             'masks': masks,
@@ -58,15 +56,21 @@ class CracksDataset(Dataset):
         }
 
     @staticmethod
-    def is_cracks_exists(masks: Tensor, threshold: float = 0.001) -> Tensor:
+    def is_cracks_exists(
+        masks: Tensor,
+        threshold: float = 0.001) -> Tensor:
+
         h, w = masks.shape[-2:]
         scale = masks.sum(dim=[1, 2, 3])
         return (scale / (h * w) >= threshold).int()
 
     @staticmethod
-    def _collate_fn(batch: List[Dict[str, Tensor]]) -> Dict[str, Tensor]:
+    def _collate_fn(
+        batch: List[Dict[str, Tensor]]) -> Dict[str, Tensor]:
+
         images, masks, cracks = zip(*(
-            (b['images'], b['masks'], b['cracks']) for b in batch
+            (b['images'], b['masks'], b['cracks'])
+            for b in batch
         ))
         return {
             'images': torch.cat(images),
@@ -75,7 +79,8 @@ class CracksDataset(Dataset):
         }
 
     def get_loader(self, **kwargs) -> DataLoader:
-        kwargs['num_workers'] = kwargs.pop('num_workers', cpu_count())
+        kwargs['num_workers'] = kwargs.pop('num_workers',\
+            cpu_count())
         return DataLoader(
             dataset=self,
             collate_fn=self._collate_fn,

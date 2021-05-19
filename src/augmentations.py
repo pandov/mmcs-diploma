@@ -8,7 +8,11 @@ from torchvision.transforms import functional as F
 
 
 class Compose(T.Compose):
-    def __call__(self, image: Union[Tensor, Image], mask: Union[Tensor, Image]) -> Tuple[Union[Tensor, Image]]:
+    def __call__(self,
+        image: Union[Tensor, Image],
+        mask: Union[Tensor, Image],
+        ) -> Tuple[Union[Tensor, Image]]:
+
         for t in self.transforms:
             image, mask = t(image, mask)
         return image, mask
@@ -20,14 +24,19 @@ class Transform(object):
 
 
 class SingleChannel(Transform):
-    def __call__(self, image: Image, mask: Image) -> Tuple[Image]:
-        # image = image.convert('L')
+    def __call__(self,
+        image: Image,
+        mask: Image)-> Tuple[Image]:
+
         mask = mask.convert('1')
         return image, mask
 
 
 class RandomHorizontalFlip(T.RandomHorizontalFlip):
-    def forward(self, image: Image, mask: Image) -> Tuple[Image]:
+    def forward(self,
+        image: Image,
+        mask: Image) -> Tuple[Image]:
+
         if torch.rand(1) < self.p:
             image = F.hflip(image)
             mask = F.hflip(mask)
@@ -35,7 +44,10 @@ class RandomHorizontalFlip(T.RandomHorizontalFlip):
 
 
 class RandomVerticalFlip(T.RandomVerticalFlip):
-    def forward(self, image: Image, mask: Image) -> Tuple[Image]:
+    def forward(self,
+        image: Image,
+        mask: Image)-> Tuple[Image]:
+
         if torch.rand(1) < self.p:
             image = F.vflip(image)
             mask = F.vflip(mask)
@@ -43,7 +55,10 @@ class RandomVerticalFlip(T.RandomVerticalFlip):
 
 
 class RandomRotation(Transform):
-    def __call__(self, image: Image, mask: Image) -> Tuple[Image]:
+    def __call__(self,
+        image: Image,
+        mask: Image) -> Tuple[Image]:
+
         angle = 90 * torch.randint(0, 4, (1,)).item()
         image = F.rotate(image, angle)
         mask = F.rotate(mask, angle)
@@ -51,14 +66,22 @@ class RandomRotation(Transform):
 
 
 class FiveCrop(T.FiveCrop):
-    def forward(self, image: Image, mask: Image) -> Tuple[Tuple[Image]]:
+    def forward(self,
+        image: Image,
+        mask: Image) -> Tuple[Tuple[Image]]:
+
         images = F.five_crop(image, self.size)
         masks = F.five_crop(mask, self.size)
         return images, masks
 
 
 class ToTensor(T.ToTensor):
-    def __call__(self, images: Tuple[Image], masks: Tuple[Image]) -> Tuple[Tensor]:
-        images = torch.stack([F.to_tensor(image) for image in images])
-        masks = torch.stack([F.to_tensor(mask) for mask in masks])
+    def __call__(self,
+        images: Tuple[Image],
+        masks: Tuple[Image]) -> Tuple[Tensor]:
+
+        images = torch.stack([
+            F.to_tensor(image) for image in images])
+        masks = torch.stack([
+            F.to_tensor(mask) for mask in masks])
         return images, masks

@@ -5,26 +5,41 @@ import torch
 from torch import nn
 
 
-class ConvBlock(nn.Sequential):
-    def __init__(self, in_channels: int, out_channels: int, bias: bool):
+class VGGBlock(nn.Sequential):
+    def __init__(self,
+        in_channels: int,
+        out_channels: int,
+        bias: bool):
+
         super().__init__(
-            nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1, bias=bias),
+            nn.Conv2d(in_channels, out_channels,
+                kernel_size=3, padding=1, bias=bias),
             nn.BatchNorm2d(out_channels),
             nn.ReLU(),
-            nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1, bias=bias),
+            nn.Conv2d(out_channels, out_channels,
+                kernel_size=3, padding=1, bias=bias),
             nn.BatchNorm2d(out_channels),
             nn.ReLU(),
         )
 
 
 class VGGEncoder(nn.Module):
-    def __init__(self, in_channels: int, num_features: int, bias: bool):
+    def __init__(self,
+    in_channels: int,
+    num_features: int,
+    bias: bool):
+
         super().__init__()
-        self.conv1 = ConvBlock(in_channels, num_features, bias)
-        self.conv2 = ConvBlock(num_features, num_features * 2, bias)
-        self.conv3 = ConvBlock(num_features * 2, num_features * 4, bias)
-        self.conv4 = ConvBlock(num_features * 4, num_features * 8, bias)
-        self.bottleneck = ConvBlock(num_features * 8, num_features * 16, bias)
+        self.conv1 = VGGBlock(
+            in_channels, num_features, bias)
+        self.conv2 = VGGBlock(
+            num_features, num_features * 2, bias)
+        self.conv3 = VGGBlock(
+            num_features * 2, num_features * 4, bias)
+        self.conv4 = VGGBlock(
+            num_features * 4, num_features * 8, bias)
+        self.bottleneck = VGGBlock(
+            num_features * 8, num_features * 16, bias)
         self.pool = nn.MaxPool2d(2)
 
     def forward(self, x: Tensor) -> Tuple[Tensor]:
@@ -46,20 +61,38 @@ class Upconv2d(nn.ConvTranspose2d):
 class Decoder(nn.Module):
     def __init__(self, num_features: int, bias):
         super().__init__()
-        self.deconv4 = Upconv2d(num_features * 16, num_features * 8, kernel_size=2, stride=2)
-        self.conv4 = ConvBlock(num_features * 16, num_features * 8, bias)
-        self.deconv3 = Upconv2d(num_features * 8, num_features * 4, kernel_size=2, stride=2)
-        self.conv3 = ConvBlock(num_features * 8, num_features * 4, bias)
-        self.deconv2 = Upconv2d(num_features * 4, num_features * 2, kernel_size=2, stride=2)
-        self.conv2 = ConvBlock(num_features * 4, num_features * 2, bias)
-        self.deconv1 = Upconv2d(num_features * 2, num_features, kernel_size=2, stride=2)
-        self.conv1 = ConvBlock(num_features * 2, num_features, bias)
+        self.deconv4 = Upconv2d(
+            num_features * 16, num_features * 8,
+            kernel_size=2, stride=2)
+        self.conv4 = VGGBlock(
+            num_features * 16, num_features * 8, bias)
+        self.deconv3 = Upconv2d(
+            num_features * 8, num_features * 4,
+            kernel_size=2, stride=2)
+        self.conv3 = VGGBlock(
+            num_features * 8, num_features * 4, bias)
+        self.deconv2 = Upconv2d(
+            num_features * 4, num_features * 2,
+            kernel_size=2, stride=2)
+        self.conv2 = VGGBlock(
+            num_features * 4, num_features * 2, bias)
+        self.deconv1 = Upconv2d(
+            num_features * 2, num_features,
+            kernel_size=2, stride=2)
+        self.conv1 = VGGBlock(
+            num_features * 2, num_features, bias)
         self.header = nn.Sequential(
             nn.Conv2d(num_features, 1, kernel_size=1),
             nn.Sigmoid(),
         )
 
-    def forward(self, x: Tensor, x4: Tensor, x3: Tensor, x2: Tensor, x1: Tensor) -> Tensor:
+    def forward(self,
+        x: Tensor,
+        x4: Tensor,
+        x3: Tensor,
+        x2: Tensor,
+        x1: Tensor) -> Tensor:
+
         x = self.deconv4(x, x4)
         x = self.deconv3(self.conv4(x), x3)
         x = self.deconv2(self.conv3(x), x2)
@@ -69,9 +102,14 @@ class Decoder(nn.Module):
 
 
 class UNet(nn.Module):
-    def __init__(self, in_channels: int = 3, out_channels: int = 1, init_features: int = 32, bias: bool = False):
+    def __init__(self,
+        in_channels: int = 3,
+        out_channels: int = 1,
+        init_features: int = 32,
+        bias: bool = False):
         super().__init__()
-        self.VGGEncoder = VGGEncoder(in_channels, init_features, bias)
+        self.VGGEncoder = VGGEncoder(
+            in_channels, init_features, bias)
         self.decoder = Decoder(init_features, bias)
 
     def forward(self, x: Tensor) -> Tensor:
@@ -84,7 +122,9 @@ class UNet(nn.Module):
         model = UNet()
         state_dict = model.state_dict()
         state_dict_hub = torch.load('torch_hub_unet.pt')
-        for key_hub, key in zip(state_dict_hub.keys(), state_dict.keys()):
+        keymap = zip(state_dict_hub.keys(),
+            state_dict.keys())
+        for key_hub, key in keymap:
             state_dict[key] = state_dict_hub[key_hub]
         model.load_state_dict(state_dict)
         return model
@@ -118,9 +158,14 @@ class Classifier(nn.Module):
 
 
 class VGGEncoderClassifier(nn.Module):
-    def __init__(self, in_channels: int = 3, init_features: int = 32, bias: bool = False):
+    def __init__(self,
+        in_channels: int = 3,
+        init_features: int = 32,
+        bias: bool = False):
+
         super().__init__()
-        self.VGGEncoder = VGGEncoder(in_channels, init_features, bias)
+        self.VGGEncoder = VGGEncoder(
+            in_channels, init_features, bias)
         self.VGGEncoder.requires_grad_(False)
         self.classifier = Classifier()
 
@@ -131,7 +176,11 @@ class VGGEncoderClassifier(nn.Module):
 
 
 class UNetClassifier(UNet):
-    def __init__(self, in_channels: int = 3, init_features: int = 32, bias: bool = False):
+    def __init__(self,
+        in_channels: int = 3,
+        init_features: int = 32,
+        bias: bool = False):
+
         super().__init__()
         self.classifier = Classifier()
 
