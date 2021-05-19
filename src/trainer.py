@@ -1,5 +1,6 @@
 import torch
 
+from src import dataset
 from torch import Tensor
 from catalyst.dl import Runner
 from typing import Dict
@@ -32,6 +33,7 @@ class Trainer(Runner):
         inputs = batch[self.input_key]
         targets = batch[self.target_key]
 
+        self.model.train(self.is_train_loader)
         with torch.set_grad_enabled(self.is_train_loader):
             outputs = self.model(inputs)
             loss = self._calc_loss(outputs, targets)
@@ -40,13 +42,26 @@ class Trainer(Runner):
                 loss.backward()
                 self.optimizer.step()
 
-            outputs = outputs.detach()
             self.batch_metrics.update({
-                'loss': loss,
+                'loss': loss.detach(),
                 'lr': self.scheduler.get_last_lr()[0],
-                **self._calc_metrics(outputs, targets),
+                **self._calc_metrics(outputs.detach(), targets),
             })
 
     def on_epoch_end(self, runner):
         super().on_epoch_end(runner)
         self.scheduler.step()
+
+    def train(self, *args, **kwargs):
+        datasets = {
+            'train': dataset.CracksDataset('train'),
+            'valid': dataset.CracksDataset('valid'),
+        }
+        batch_size = kwargs.pop('batch_size', 1)
+        loaders = {
+            'train': datasets['train'].get_loader(
+                batch_size=batch_size, shuffle=True, drop_last=True),
+            'valid': datasets['valid'].get_loader(batch_size=batch_size),
+        }
+        kwargs['loaders'] = loaders
+        super().train(*args, **kwargs)
