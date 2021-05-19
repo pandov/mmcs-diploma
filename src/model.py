@@ -152,9 +152,7 @@ class Classifier(nn.Module):
         )
 
     def forward(self, x: Tensor) -> Tensor:
-        print(x.shape)
         x = self.avgpool(x)
-        print(x.shape)
         x = self.header(x)
         return x
 
@@ -173,7 +171,6 @@ class VGGEncoderClassifier(nn.Module):
 
     def forward(self, x: Tensor) -> Tuple[Tensor]:
         x = self.VGGEncoder(x)[0]
-        print(x.shape)
         x = self.classifier(x)
         return x
 
