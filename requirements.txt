@@ -1,4 +1,4 @@
 alchemy==20.5
 catalyst==20.12
-torch==1.7.0
-torchvision==0.8.1
+# torch==1.7.0
+# torchvision==0.8.1
