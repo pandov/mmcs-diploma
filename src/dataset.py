@@ -10,7 +10,7 @@ from os import cpu_count
 from src import transforms
 
 class CracksDataset(Dataset):
-    transform = {
+    _transform = {
         'train': transforms.Compose([
             transforms.SingleChannel(),
             transforms.RandomVerticalFlip(),
@@ -26,8 +26,8 @@ class CracksDataset(Dataset):
         ]),
     }
 
-    def __init__(self, mode: str):
-        self.mode = mode
+    def __init__(self, mode: str, transform: transforms.Compose = None):
+        self.transform = self._transform[mode] if transform is None else transform
         self.images = tuple(Path(f'dataset/{mode}/images').rglob('*.jpg'))
         self.masks = tuple(Path(f'dataset/{mode}/masks').rglob('*.jpg'))
         self._check_matches()
@@ -48,7 +48,7 @@ class CracksDataset(Dataset):
     def __getitem__(self, index: int) -> Dict[str, Tensor]:
         image = self.image(index)
         mask = self.mask(index)
-        images, masks = self.transform[self.mode](image, mask)
+        images, masks = self.transform(image, mask)
         cracks = self.is_cracks_exists(masks)
         masks[cracks == 0] = torch.zeros_like(masks[cracks == 0])
         return {

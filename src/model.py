@@ -120,3 +120,17 @@ class EncoderClassifier(nn.Module):
         x = self.encoder(x)[0]
         x = self.classifier(x.flatten(1))
         return x
+
+
+class UNetClassifier(UNet):
+    def __init__(self, in_channels: int = 3, init_features: int = 32, bias: bool = False):
+        super().__init__()
+        self.classifier = EncoderClassifier(in_channels, init_features, bias).classifier
+
+    def forward(self, x: Tensor) -> Tensor:
+        x, x1, x2, x3, x4 = self.encoder(x)
+        y = self.classifier(x.flatten(1))
+        x = self.bottleneck(x)
+        x = self.decoder(x, x4, x3, x2, x1)
+        x = self.header(x)
+        return x, y
