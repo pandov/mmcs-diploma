@@ -1,0 +1,340 @@
+{
+  "best": {
+    "loss": 0.20373672767814283,
+    "bce": 0.20373672767814283,
+    "accuracy": 0.919174087997031,
+    "lr": 0.0001
+  },
+  "last": {
+    "loss": 0.2048128625130759,
+    "bce": 0.2048128625130759,
+    "accuracy": 0.916106239251331,
+    "lr": 0.0001
+  },
+  "train.29": {
+    "loss": 0.20373672767814283,
+    "bce": 0.20373672767814283,
+    "accuracy": 0.919174087997031,
+    "lr": 0.0001
+  },
+  "epoch_0": [
+    "logs/classification/1/checkpoints/train.1.pth",
+    0.3070460478157068,
+    {
+      "loss": 0.3070460478157068,
+      "bce": 0.3070460478157068,
+      "accuracy": 0.8683186298978013,
+      "lr": 0.01
+    }
+  ],
+  "epoch_1": [
+    "logs/classification/1/checkpoints/train.2.pth",
+    0.2804459884828699,
+    {
+      "loss": 0.2804459884828699,
+      "bce": 0.2804459884828699,
+      "accuracy": 0.8843658270034112,
+      "lr": 0.01
+    }
+  ],
+  "epoch_2": [
+    "logs/classification/1/checkpoints/train.3.pth",
+    0.27128655882140185,
+    {
+      "loss": 0.27128655882140185,
+      "bce": 0.27128655882140185,
+      "accuracy": 0.8873156813393651,
+      "lr": 0.01
+    }
+  ],
+  "epoch_3": [
+    "logs/classification/1/checkpoints/train.4.pth",
+    0.29649823536123854,
+    {
+      "loss": 0.29649823536123854,
+      "bce": 0.29649823536123854,
+      "accuracy": 0.8758702514445889,
+      "lr": 0.01
+    }
+  ],
+  "epoch_4": [
+    "logs/classification/1/checkpoints/train.5.pth",
+    0.22794802046619955,
+    {
+      "loss": 0.22794802046619955,
+      "bce": 0.22794802046619955,
+      "accuracy": 0.9059587487077293,
+      "lr": 0.001
+    }
+  ],
+  "epoch_5": [
+    "logs/classification/1/checkpoints/train.6.pth",
+    0.24608173545911516,
+    {
+      "loss": 0.24608173545911516,
+      "bce": 0.24608173545911516,
+      "accuracy": 0.8967552088003242,
+      "lr": 0.001
+    }
+  ],
+  "epoch_6": [
+    "logs/classification/1/checkpoints/train.7.pth",
+    0.22898814471323134,
+    {
+      "loss": 0.22898814471323134,
+      "bce": 0.22898814471323134,
+      "accuracy": 0.904778805032241,
+      "lr": 0.001
+    }
+  ],
+  "epoch_7": [
+    "logs/classification/1/checkpoints/train.8.pth",
+    0.2238776913061079,
+    {
+      "loss": 0.2238776913061079,
+      "bce": 0.2238776913061079,
+      "accuracy": 0.9086726100043911,
+      "lr": 0.001
+    }
+  ],
+  "epoch_8": [
+    "logs/classification/1/checkpoints/train.9.pth",
+    0.22679963391439048,
+    {
+      "loss": 0.22679963391439048,
+      "bce": 0.22679963391439048,
+      "accuracy": 0.9058407542979824,
+      "lr": 0.001
+    }
+  ],
+  "epoch_9": [
+    "logs/classification/1/checkpoints/train.10.pth",
+    0.2189515392370193,
+    {
+      "loss": 0.2189515392370193,
+      "bce": 0.2189515392370193,
+      "accuracy": 0.9105605188724218,
+      "lr": 0.001
+    }
+  ],
+  "epoch_10": [
+    "logs/classification/1/checkpoints/train.11.pth",
+    0.22389990980778127,
+    {
+      "loss": 0.22389990980778127,
+      "bce": 0.22389990980778127,
+      "accuracy": 0.9096165640164262,
+      "lr": 0.001
+    }
+  ],
+  "epoch_11": [
+    "logs/classification/1/checkpoints/train.12.pth",
+    0.2201403237186966,
+    {
+      "loss": 0.2201403237186966,
+      "bce": 0.2201403237186966,
+      "accuracy": 0.9092625795212466,
+      "lr": 0.001
+    }
+  ],
+  "epoch_12": [
+    "logs/classification/1/checkpoints/train.13.pth",
+    0.21543313047428295,
+    {
+      "loss": 0.21543313047428295,
+      "bce": 0.21543313047428295,
+      "accuracy": 0.9135103685665973,
+      "lr": 0.001
+    }
+  ],
+  "epoch_13": [
+    "logs/classification/1/checkpoints/train.14.pth",
+    0.2176291537306279,
+    {
+      "loss": 0.2176291537306279,
+      "bce": 0.2176291537306279,
+      "accuracy": 0.9116224634963854,
+      "lr": 0.001
+    }
+  ],
+  "epoch_14": [
+    "logs/classification/1/checkpoints/train.15.pth",
+    0.2141688797556984,
+    {
+      "loss": 0.2141688797556984,
+      "bce": 0.2141688797556984,
+      "accuracy": 0.914100338083453,
+      "lr": 0.001
+    }
+  ],
+  "epoch_15": [
+    "logs/classification/1/checkpoints/train.16.pth",
+    0.21164252066704559,
+    {
+      "loss": 0.21164252066704559,
+      "bce": 0.21164252066704559,
+      "accuracy": 0.9152802809149815,
+      "lr": 0.001
+    }
+  ],
+  "epoch_16": [
+    "logs/classification/1/checkpoints/train.17.pth",
+    0.21456095683924128,
+    {
+      "loss": 0.21456095683924128,
+      "bce": 0.21456095683924128,
+      "accuracy": 0.9112684794231853,
+      "lr": 0.001
+    }
+  ],
+  "epoch_17": [
+    "logs/classification/1/checkpoints/train.18.pth",
+    0.21805692172683444,
+    {
+      "loss": 0.21805692172683444,
+      "bce": 0.21805692172683444,
+      "accuracy": 0.9105605163405425,
+      "lr": 0.001
+    }
+  ],
+  "epoch_18": [
+    "logs/classification/1/checkpoints/train.19.pth",
+    0.21204668760332648,
+    {
+      "loss": 0.21204668760332648,
+      "bce": 0.21204668760332648,
+      "accuracy": 0.9156342633002623,
+      "lr": 0.001
+    }
+  ],
+  "epoch_19": [
+    "logs/classification/1/checkpoints/train.20.pth",
+    0.20959302815320216,
+    {
+      "loss": 0.20959302815320216,
+      "bce": 0.20959302815320216,
+      "accuracy": 0.9181121395752493,
+      "lr": 0.001
+    }
+  ],
+  "epoch_20": [
+    "logs/classification/1/checkpoints/train.21.pth",
+    0.21276513778200717,
+    {
+      "loss": 0.21276513778200717,
+      "bce": 0.21276513778200717,
+      "accuracy": 0.9133923741568507,
+      "lr": 0.0001
+    }
+  ],
+  "epoch_21": [
+    "logs/classification/1/checkpoints/train.22.pth",
+    0.21056876459315546,
+    {
+      "loss": 0.21056876459315546,
+      "bce": 0.21056876459315546,
+      "accuracy": 0.9143363269029464,
+      "lr": 0.0001
+    }
+  ],
+  "epoch_22": [
+    "logs/classification/1/checkpoints/train.23.pth",
+    0.2098139437327607,
+    {
+      "loss": 0.2098139437327607,
+      "bce": 0.2098139437327607,
+      "accuracy": 0.9153982753247286,
+      "lr": 0.0001
+    }
+  ],
+  "epoch_23": [
+    "logs/classification/1/checkpoints/train.24.pth",
+    0.20881902911428332,
+    {
+      "loss": 0.20881902911428332,
+      "bce": 0.20881902911428332,
+      "accuracy": 0.9172861803949408,
+      "lr": 0.0001
+    }
+  ],
+  "epoch_24": [
+    "logs/classification/1/checkpoints/train.25.pth",
+    0.20797436334918037,
+    {
+      "loss": 0.20797436334918037,
+      "bce": 0.20797436334918037,
+      "accuracy": 0.9159882465295031,
+      "lr": 0.0001
+    }
+  ],
+  "epoch_25": [
+    "logs/classification/1/checkpoints/train.26.pth",
+    0.2112507338413095,
+    {
+      "loss": 0.2112507338413095,
+      "bce": 0.2112507338413095,
+      "accuracy": 0.9149263006396001,
+      "lr": 0.0001
+    }
+  ],
+  "epoch_26": [
+    "logs/classification/1/checkpoints/train.27.pth",
+    0.20500595240268554,
+    {
+      "loss": 0.20500595240268554,
+      "bce": 0.20500595240268554,
+      "accuracy": 0.9179941447435223,
+      "lr": 0.0001
+    }
+  ],
+  "epoch_27": [
+    "logs/classification/1/checkpoints/train.28.pth",
+    0.21124897948012933,
+    {
+      "loss": 0.21124897948012933,
+      "bce": 0.21124897948012933,
+      "accuracy": 0.9145723157224408,
+      "lr": 0.0001
+    }
+  ],
+  "epoch_28": [
+    "logs/classification/1/checkpoints/train.29.pth",
+    0.20373672767814283,
+    {
+      "loss": 0.20373672767814283,
+      "bce": 0.20373672767814283,
+      "accuracy": 0.919174087997031,
+      "lr": 0.0001
+    }
+  ],
+  "epoch_29": [
+    "logs/classification/1/checkpoints/train.30.pth",
+    0.20530210161762957,
+    {
+      "loss": 0.20530210161762957,
+      "bce": 0.20530210161762957,
+      "accuracy": 0.9166962108780854,
+      "lr": 0.0001
+    }
+  ],
+  "epoch_30": [
+    "logs/classification/1/checkpoints/train.31.pth",
+    0.205377017189048,
+    {
+      "loss": 0.205377017189048,
+      "bce": 0.205377017189048,
+      "accuracy": 0.9171681868291536,
+      "lr": 0.0001
+    }
+  ],
+  "epoch_31": [
+    "logs/classification/1/checkpoints/train.32.pth",
+    0.2048128625130759,
+    {
+      "loss": 0.2048128625130759,
+      "bce": 0.2048128625130759,
+      "accuracy": 0.916106239251331,
+      "lr": 0.0001
+    }
+  ]
+}
