@@ -67,8 +67,7 @@ class Trainer(Runner):
         optimizer = torch.optim.SGD(
             net.parameters(),
             lr=1e-3,
-            momentum=0.9,
-            nesterov=True)
+            momentum=0.9)
 
         kwargs.update({
             'model': model,
