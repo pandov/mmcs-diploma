@@ -17,14 +17,14 @@ class ConvBlock(nn.Sequential):
         )
 
 
-class Encoder(nn.Module):
+class VGGEncoder(nn.Module):
     def __init__(self, in_channels: int, num_features: int, bias: bool):
         super().__init__()
         self.conv1 = ConvBlock(in_channels, num_features, bias)
         self.conv2 = ConvBlock(num_features, num_features * 2, bias)
         self.conv3 = ConvBlock(num_features * 2, num_features * 4, bias)
         self.conv4 = ConvBlock(num_features * 4, num_features * 8, bias)
-        self.bottleneck = ConvBlock(num_feautres * 8, num_feautres * 16, bias)
+        self.bottleneck = ConvBlock(num_features * 8, num_features * 16, bias)
         self.pool = nn.MaxPool2d(2)
 
     def forward(self, x: Tensor) -> Tuple[Tensor]:
@@ -55,7 +55,7 @@ class Decoder(nn.Module):
         self.deconv1 = Upconv2d(num_features * 2, num_features, kernel_size=2, stride=2)
         self.conv1 = ConvBlock(num_features * 2, num_features, bias)
         self.header = nn.Sequential(
-            nn.Conv2d(num_feautres, 1, kernel_size=1),
+            nn.Conv2d(num_features, 1, kernel_size=1),
             nn.Sigmoid(),
         )
 
@@ -71,11 +71,11 @@ class Decoder(nn.Module):
 class UNet(nn.Module):
     def __init__(self, in_channels: int = 3, out_channels: int = 1, init_features: int = 32, bias: bool = False):
         super().__init__()
-        self.encoder = Encoder(in_channels, init_features, bias)
+        self.VGGEncoder = VGGEncoder(in_channels, init_features, bias)
         self.decoder = Decoder(init_features, bias)
 
     def forward(self, x: Tensor) -> Tensor:
-        x, x1, x2, x3, x4 = self.encoder(x)
+        x, x1, x2, x3, x4 = self.VGGEncoder(x)
         x = self.decoder(x, x4, x3, x2, x1)
         return x
 
@@ -117,15 +117,15 @@ class Classifier(nn.Module):
         return x
 
 
-class EncoderClassifier(nn.Module):
+class VGGEncoderClassifier(nn.Module):
     def __init__(self, in_channels: int = 3, init_features: int = 32, bias: bool = False):
         super().__init__()
-        self.encoder = Encoder(in_channels, init_features, bias)
-        self.encoder.requires_grad_(False)
+        self.VGGEncoder = VGGEncoder(in_channels, init_features, bias)
+        self.VGGEncoder.requires_grad_(False)
         self.classifier = Classifier()
 
     def forward(self, x: Tensor) -> Tuple[Tensor]:
-        x = self.encoder(x)[0]
+        x = self.VGGEncoder(x)[0]
         x = self.classifier(x)
         return x
 
@@ -136,7 +136,7 @@ class UNetClassifier(UNet):
         self.classifier = Classifier()
 
     def forward(self, x: Tensor) -> Tensor:
-        x, x1, x2, x3, x4 = self.encoder(x)
+        x, x1, x2, x3, x4 = self.VGGEncoder(x)
         x = self.decoder(x, x4, x3, x2, x1)
         y = self.classifier(x)
         return x, y
