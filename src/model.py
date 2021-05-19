@@ -117,18 +117,6 @@ class UNet(nn.Module):
         x = self.decoder(x, x4, x3, x2, x1)
         return x
 
-    @staticmethod
-    def load_from_torch_hub():
-        model = UNet()
-        state_dict = model.state_dict()
-        state_dict_hub = torch.load('torch_hub_unet.pt')
-        keymap = zip(state_dict_hub.keys(),
-            state_dict.keys())
-        for key_hub, key in keymap:
-            state_dict[key] = state_dict_hub[key_hub]
-        model.load_state_dict(state_dict)
-        return model
-
 
 class LinearBlock(nn.Sequential):
     def __init__(self, in_features: int, out_features: int):
