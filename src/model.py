@@ -142,7 +142,7 @@ class LinearBlock(nn.Sequential):
 class Classifier(nn.Module):
     def __init__(self):
         super().__init__()
-        self.avgpool = nn.AdaptiveAvgPool2d((7, 7))
+        self.avgpool = nn.AvgPool2d(2)
         self.header = nn.Sequential(
             nn.Flatten(1),
             LinearBlock(1024 * 7 * 7, 2048),
@@ -186,6 +186,6 @@ class UNetClassifier(UNet):
 
     def forward(self, x: Tensor) -> Tensor:
         x, x1, x2, x3, x4 = self.VGGEncoder(x)
-        x = self.decoder(x, x4, x3, x2, x1)
         y = self.classifier(x)
+        x = self.decoder(x, x4, x3, x2, x1)
         return x, y

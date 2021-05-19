@@ -28,9 +28,9 @@ class CracksDataset(Dataset):
 
     def __init__(self, mode: str):
         self.transform = self.TRANSFORM[mode]
-        self.images = tuple(Path(f'dataset/{mode}/images')\
+        self.images = list(Path(f'dataset/{mode}/images')\
             .rglob('*.jpg'))
-        self.masks = tuple(Path(f'dataset/{mode}/masks')\
+        self.masks = list(Path(f'dataset/{mode}/masks')\
             .rglob('*.jpg'))
 
     def __len__(self):
