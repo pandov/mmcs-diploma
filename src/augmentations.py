@@ -50,13 +50,6 @@ class RandomRotation(Transform):
         return image, mask
 
 
-class Resize(T.Resize):
-    def forward(self, image: Image, mask: Image) -> Tuple[Image]:
-        image = F.resize(image, self.size, self.interpolation)
-        mask = F.resize(mask, self.size, self.interpolation)
-        return image, mask
-
-
 class FiveCrop(T.FiveCrop):
     def forward(self, image: Image, mask: Image) -> Tuple[Tuple[Image]]:
         images = F.five_crop(image, self.size)
@@ -65,14 +58,7 @@ class FiveCrop(T.FiveCrop):
 
 
 class ToTensor(T.ToTensor):
-    def __call__(self, images: Union[Image, Tuple[Image]], masks: Union[Image, Tuple[Image]]) -> Tuple[Tensor]:
-        if isinstance(images, tuple) and isinstance(masks, tuple):
-            images = torch.stack([F.to_tensor(image) for image in images])
-            masks = torch.stack([F.to_tensor(mask) for mask in masks])
-            return images, masks
-        elif isinstance(images, Image) and isinstance(masks, Image):
-            images = F.to_tensor(images).unsqueeze(0)
-            masks = F.to_tensor(masks).unsqueeze(0)
-            return images, masks
-        else:
-            raise NotImplementedError
+    def __call__(self, images: Tuple[Image], masks: Tuple[Image]) -> Tuple[Tensor]:
+        images = torch.stack([F.to_tensor(image) for image in images])
+        masks = torch.stack([F.to_tensor(mask) for mask in masks])
+        return images, masks

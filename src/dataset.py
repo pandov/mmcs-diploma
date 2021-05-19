@@ -7,27 +7,27 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision.datasets.folder import default_loader
 from pathlib import Path
 from os import cpu_count
-from src import transforms
+from src import augmentations
 
 class CracksDataset(Dataset):
-    _transform = {
-        'train': transforms.Compose([
-            transforms.SingleChannel(),
-            transforms.RandomVerticalFlip(),
-            transforms.RandomHorizontalFlip(),
-            transforms.RandomRotation(),
-            transforms.FiveCrop(224),
-            transforms.ToTensor(),
+    transform = {
+        'train': augmentations.Compose([
+            augmentations.SingleChannel(),
+            augmentations.RandomVerticalFlip(),
+            augmentations.RandomHorizontalFlip(),
+            augmentations.RandomRotation(),
+            augmentations.FiveCrop(224),
+            augmentations.ToTensor(),
         ]),
-        'valid': transforms.Compose([
-            transforms.SingleChannel(),
-            transforms.FiveCrop(224),
-            transforms.ToTensor(),
+        'valid': augmentations.Compose([
+            augmentations.SingleChannel(),
+            augmentations.FiveCrop(224),
+            augmentations.ToTensor(),
         ]),
     }
 
-    def __init__(self, mode: str, transform: transforms.Compose = None):
-        self.transform = self._transform[mode] if transform is None else transform
+    def __init__(self, mode: str):
+        self.mode = mode
         self.images = tuple(Path(f'dataset/{mode}/images').rglob('*.jpg'))
         self.masks = tuple(Path(f'dataset/{mode}/masks').rglob('*.jpg'))
         self._check_matches()
@@ -48,7 +48,7 @@ class CracksDataset(Dataset):
     def __getitem__(self, index: int) -> Dict[str, Tensor]:
         image = self.image(index)
         mask = self.mask(index)
-        images, masks = self.transform(image, mask)
+        images, masks = self.transform[self.mode](image, mask)
         cracks = self.is_cracks_exists(masks)
         masks[cracks == 0] = torch.zeros_like(masks[cracks == 0])
         return {
