@@ -45,13 +45,8 @@ class Trainer(Runner):
             outputs = outputs.detach()
             self.batch_metrics.update({
                 'loss': loss.detach(),
-                'lr': self.scheduler.get_last_lr()[0],
                 **self._calc_metrics(outputs, targets),
             })
-
-    def on_epoch_end(self, runner):
-        super().on_epoch_end(runner)
-        self.scheduler.step()
 
     def train(self, *args, **kwargs):
         datasets = {
@@ -74,15 +69,10 @@ class Trainer(Runner):
             lr=1e-3,
             momentum=0.9,
             nesterov=True)
-        scheduler = torch.optim.lr_scheduler.MultiStepLR(
-            optimizer,
-            milestones=[4, 20],
-            gamma=0.1)
 
         kwargs.update({
             'model': model,
             'optimizer': optimizer,
-            'scheduler': scheduler,
             'loaders': loaders,
         })
         super().train(*args, **kwargs)
