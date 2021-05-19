@@ -164,13 +164,13 @@ class VGGEncoderClassifier(nn.Module):
         bias: bool = False):
 
         super().__init__()
-        self.VGGEncoder = VGGEncoder(
+        self.encoder = VGGEncoder(
             in_channels, init_features, bias)
-        self.VGGEncoder.requires_grad_(False)
+        self.encoder.requires_grad_(False)
         self.classifier = Classifier()
 
     def forward(self, x: Tensor) -> Tuple[Tensor]:
-        x = self.VGGEncoder(x)[0]
+        x = self.encoder(x)[0]
         x = self.classifier(x)
         return x
 
