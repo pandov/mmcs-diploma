@@ -1,8 +1,7 @@
 import torch
 
-from src import dataset
+from src.dataset import CracksDataset, DataLoader
 from torch import Tensor
-from torch.utils.data import DataLoader
 from torch.nn import Module
 from torch.optim import Optimizer
 from torch.optim.lr_scheduler import _LRScheduler
@@ -55,8 +54,8 @@ class Trainer(Runner):
 
     def _get_datasets(self) -> Dict[str, CracksDataset]:
         return {
-            'train': dataset.CracksDataset('train'),
-            'valid': dataset.CracksDataset('valid'),
+            'train': CracksDataset('train'),
+            'valid': CracksDataset('valid'),
         }
 
     def _get_loaders(self,
