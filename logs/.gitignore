@@ -1,2 +1,3 @@
+trash
 *.pth
 !segmentation/**/best.pth
