@@ -65,7 +65,8 @@ class CracksDataset(Dataset):
 
     @staticmethod
     def _collate_fn(
-        batch: List[Dict[str, Tensor]]) -> Dict[str, Tensor]:
+        batch: List[Dict[str, Tensor]],
+        ) -> Dict[str, Tensor]:
 
         images, masks, cracks = zip(*(
             (b['images'], b['masks'], b['cracks'])
@@ -84,5 +85,4 @@ class CracksDataset(Dataset):
             dataset=self,
             collate_fn=self._collate_fn,
             pin_memory=torch.cuda.is_available(),
-            **kwargs,
-        )
+            **kwargs)
