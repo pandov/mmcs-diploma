@@ -108,12 +108,12 @@ class UNet(nn.Module):
         init_features: int = 32,
         bias: bool = False):
         super().__init__()
-        self.VGGEncoder = VGGEncoder(
+        self.encoder = VGGEncoder(
             in_channels, init_features, bias)
         self.decoder = Decoder(init_features, bias)
 
     def forward(self, x: Tensor) -> Tensor:
-        x, x1, x2, x3, x4 = self.VGGEncoder(x)
+        x, x1, x2, x3, x4 = self.encoder(x)
         x = self.decoder(x, x4, x3, x2, x1)
         return x
 
@@ -175,8 +175,9 @@ class UNetClassifier(UNet):
 
     def forward(self, x: Tensor) -> Tensor:
         z = torch.zeros_like(x)
-        x, x1, x2, x3, x4 = self.VGGEncoder(x)
+        x, x1, x2, x3, x4 = self.encoder(x)
         y = self.classifier(x)
         idx = torch.where(y > 0.5)[0]
-        z[idx] = self.decoder(x[idx], x4[idx], x3[idx], x2[idx], x1[idx])
+        z[idx] = self.decoder(
+            x[idx], x4[idx], x3[idx], x2[idx], x1[idx])
         return z, y
