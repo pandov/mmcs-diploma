@@ -1,5 +1,4 @@
 import torch
-
 from src.dataset import CracksDataset, DataLoader
 from torch import Tensor
 from torch.nn import Module
@@ -20,16 +19,12 @@ class Trainer(Runner):
         self.target_key = target_key
 
     def _calc_loss(self,
-        outputs: Tensor,
-        targets: Tensor,
-        ) -> Tensor:
-
+        outputs: Tensor, targets: Tensor) -> Tensor:
         raise NotImplementedError
 
     def _calc_metrics(self,
         outputs: Tensor,
         targets: Tensor) -> Dict[str, Tensor]:
-
         raise NotImplementedError
 
     def _handle_batch(self, batch: Tensor):
@@ -59,8 +54,7 @@ class Trainer(Runner):
         }
 
     def _get_loaders(self,
-        batch_size: int,
-        ) -> Dict[str, DataLoader]:
+        batch_size: int) -> Dict[str, DataLoader]:
 
         datasets = self._get_datasets()
         return {
