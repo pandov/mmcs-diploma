@@ -34,17 +34,16 @@ class Trainer(Runner):
             outputs = self.model(inputs)
             loss = self._calc_loss(outputs, targets)
 
-            if self.is_train_loader:
-                self.optimizer.zero_grad()
-                loss.backward()
-                self.optimizer.step()
+        if self.is_train_loader:
+            self.optimizer.zero_grad()
+            loss.backward()
+            self.optimizer.step()
 
-                outputs = outputs.detach()
-                self.batch_metrics.update({
-                    'loss': loss.detach(),
-                    'lr': self.scheduler.get_last_lr()[0],
-                    **self._calc_metrics(outputs, targets),
-                })
+        self.batch_metrics.update({
+            'loss': loss,
+            'lr': self.scheduler.get_last_lr()[0],
+            **self._calc_metrics(outputs, targets),
+        })
 
     def _get_datasets(self) -> Dict[str, CracksDataset]:
         return {
