@@ -133,9 +133,9 @@ class Classifier(nn.Module):
         self.avgpool = nn.AvgPool2d(2)
         self.header = nn.Sequential(
             nn.Flatten(1),
-            LinearBlock(512 * 7 * 7, 2048),
-            LinearBlock(2048, 2048),
-            nn.Linear(2048, 1),
+            LinearBlock(512 * 7 * 7, 1024),
+            LinearBlock(1024, 1024),
+            nn.Linear(1024, 1),
             nn.Sigmoid(),
         )
 
