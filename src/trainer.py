@@ -9,11 +9,9 @@ from typing import Dict
 
 
 class Trainer(Runner):
-    def __init__(self,
-        input_key: str, target_key: str, *args, **kwargs):
-
+    def __init__(self, target_key: str, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.input_key = input_key
+        self.input_key = 'images'
         self.target_key = target_key
 
     def _calc_loss(self,
@@ -27,7 +25,7 @@ class Trainer(Runner):
 
         raise NotImplementedError
 
-    def _handle_batch(self, batch: Tensor):
+    def _handle_batch(self, batch: Dict[str, Tensor]):
         inputs = batch[self.input_key]
         targets = batch[self.target_key]
 
@@ -35,10 +33,11 @@ class Trainer(Runner):
         with torch.set_grad_enabled(self.is_train_loader):
             outputs = self.model(inputs)
             loss = self._calc_loss(outputs, targets)
-            if self.is_train_loader:
-                self.optimizer.zero_grad()
-                loss.backward()
-                self.optimizer.step()
+
+        if self.is_train_loader:
+            self.optimizer.zero_grad()
+            loss.backward()
+            self.optimizer.step()
 
             outputs = outputs.detach()
             self.batch_metrics.update({
@@ -75,10 +74,8 @@ class Trainer(Runner):
         return torch.optim.lr_scheduler.MultiStepLR(
             optimizer, milestones=[4, 32, 48], gamma=0.1)
 
-    def train(self, *args, **kwargs):
-        batch_size = kwargs.pop('batch_size', 1)
+    def train(self, model: Module, batch_size: int = 1, **kwargs):
         loaders = self._get_loaders(batch_size)
-        model = kwargs.pop('model')
         optimizer = self._get_optimizer(model)
         scheduler = self._get_scheduler(optimizer)
         kwargs['loaders'] = loaders

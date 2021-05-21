@@ -158,7 +158,7 @@ class VGGEncoderClassifier(nn.Module):
         self.classifier = Classifier()
 
     def forward(self, x: Tensor) -> Tuple[Tensor]:
-        x = self.encoder(x)[0]
+        x, _, _, _, _ = self.encoder(x)
         x = self.classifier(x)
         return x
 
