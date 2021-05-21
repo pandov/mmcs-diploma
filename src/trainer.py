@@ -82,7 +82,7 @@ class Trainer(Runner):
         kwargs['model'] = model
         kwargs['optimizer'] = optimizer
         kwargs['scheduler'] = scheduler
-        super().train(*args, **kwargs)
+        super().train(**kwargs)
 
     def on_epoch_end(self, runner):
         super().on_epoch_end(runner)
