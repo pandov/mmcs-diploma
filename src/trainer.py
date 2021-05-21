@@ -75,7 +75,9 @@ class Trainer(Runner):
     def _get_optimizer(self, model: Module) -> Optimizer:
         return torch.optim.Adam(model.parameters(), lr=1e-2)
 
-    def _get_scheduler(self, optimizer: Optimizer) -> _LRScheduler:
+    def _get_scheduler(self,
+        optimizer: Optimizer) -> _LRScheduler:
+
         return torch.optim.lr_scheduler.MultiStepLR(
             optimizer, milestones=[4, 32, 48], gamma=0.1)
 

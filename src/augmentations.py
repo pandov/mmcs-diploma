@@ -23,15 +23,6 @@ class Transform(object):
         return self.__class__.__name__ + '()'
 
 
-class SingleChannel(Transform):
-    def __call__(self,
-        image: Image,
-        mask: Image)-> Tuple[Image]:
-
-        mask = mask.convert('1')
-        return image, mask
-
-
 class RandomHorizontalFlip(T.RandomHorizontalFlip):
     def forward(self,
         image: Image,

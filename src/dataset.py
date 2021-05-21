@@ -9,10 +9,10 @@ from pathlib import Path
 from os import cpu_count
 from src import augmentations
 
+
 class CracksDataset(Dataset):
     TRANSFORM = {
         'train': augmentations.Compose([
-            augmentations.SingleChannel(),
             augmentations.RandomVerticalFlip(),
             augmentations.RandomHorizontalFlip(),
             augmentations.RandomRotation(),
@@ -20,7 +20,6 @@ class CracksDataset(Dataset):
             augmentations.ToTensor(),
         ]),
         'valid': augmentations.Compose([
-            augmentations.SingleChannel(),
             augmentations.FiveCrop(224),
             augmentations.ToTensor(),
         ]),
@@ -40,7 +39,7 @@ class CracksDataset(Dataset):
         return default_loader(self.images[index])
 
     def mask(self, index: int) -> Image:
-        return default_loader(self.masks[index])
+        return default_loader(self.masks[index]).convert('1')
 
     def __getitem__(self, index: int) -> Dict[str, Tensor]:
         image = self.image(index)
