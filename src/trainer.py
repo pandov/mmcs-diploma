@@ -10,9 +10,7 @@ from typing import Dict
 
 class Trainer(Runner):
     def __init__(self,
-        input_key: str,
-        target_key: str,
-        *args, **kwargs):
+        input_key: str, target_key: str, *args, **kwargs):
 
         super().__init__(*args, **kwargs)
         self.input_key = input_key
@@ -20,11 +18,13 @@ class Trainer(Runner):
 
     def _calc_loss(self,
         outputs: Tensor, targets: Tensor) -> Tensor:
+
         raise NotImplementedError
 
     def _calc_metrics(self,
         outputs: Tensor,
         targets: Tensor) -> Dict[str, Tensor]:
+
         raise NotImplementedError
 
     def _handle_batch(self, batch: Tensor):
