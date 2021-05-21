@@ -118,15 +118,24 @@ class UNet(nn.Module):
         return x
 
 
+class LinearBlock(nn.Sequential):
+    def __init__(self, in_features: int, out_features: int):
+        super().__init__(
+            nn.Linear(in_features, out_features),
+            nn.BatchNorm1d(out_features),
+            nn.ReLU(),
+        )
+
+
 class Classifier(nn.Module):
     def __init__(self):
         super().__init__()
         self.avgpool = nn.AvgPool2d(2)
         self.header = nn.Sequential(
             nn.Flatten(1),
-            nn.Linear(512 * 7 * 7, 1024),
-            nn.ReLU(),
-            nn.Linear(1024, 1),
+            LinearBlock(512 * 7 * 7, 2048),
+            LinearBlock(2048, 2048),
+            nn.Linear(2048, 1),
             nn.Sigmoid(),
         )
 
