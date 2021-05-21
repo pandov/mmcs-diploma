@@ -171,9 +171,12 @@ class UNetClassifier(UNet):
 
         super().__init__()
         self.classifier = Classifier()
+        self.eval()
 
     def forward(self, x: Tensor) -> Tensor:
+        z = torch.zeros_like(x)
         x, x1, x2, x3, x4 = self.VGGEncoder(x)
         y = self.classifier(x)
-        x = self.decoder(x, x4, x3, x2, x1)
-        return x, y
+        idx = torch.where(y > 0.5)[0]
+        z[idx] = self.decoder(x[idx], x4[idx], x3[idx], x2[idx], x1[idx])
+        return z, y

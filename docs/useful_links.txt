@@ -15,3 +15,6 @@ https://stats.stackexchange.com/questions/321460/dice-coefficient-loss-function-
 https://arxiv.org/pdf/2006.14822.pdf
 
 https://www.jeremyjordan.me/semantic-segmentation/
+
+
+https://ruder.io/optimizing-gradient-descent/index.htm
