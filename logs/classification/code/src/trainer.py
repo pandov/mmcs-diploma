@@ -71,7 +71,7 @@ class Trainer(Runner):
         optimizer: Optimizer) -> _LRScheduler:
 
         return torch.optim.lr_scheduler.MultiStepLR(
-            optimizer, milestones=[4, 32, 48], gamma=0.1)
+            optimizer, milestones=[2, 32, 48], gamma=0.1)
 
     def train(self, model: Module, batch_size: int = 1, **kwargs):
         loaders = self._get_loaders(batch_size)
